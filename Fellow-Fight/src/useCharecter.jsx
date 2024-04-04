@@ -78,3 +78,22 @@ const useCharacter = (canvasRef) => {
 };
 
 export default useCharacter;
+
+
+const resizeCanvas = () => {
+  if (!canvasRef.current) return;
+  const { innerWidth: vw, innerHeight: vh } = window;
+  const scale = Math.max(vw / gameViewPort.WIDTH, vh / gameViewPort.HEIGHT);
+  const canvasEl = canvasRef.current;
+  const context = canvasEl.getContext("2d");
+
+  canvasEl.width = gameViewPort.WIDTH * scale;
+  canvasEl.height = gameViewPort.HEIGHT * scale;
+  canvasEl.style.width = `${vw}px`;
+  canvasEl.style.height = `${vh}px`;
+
+  context.drawImage(stage, 0, 0, canvasEl.width, canvasEl.height);
+  context.save();
+  context.scale(scale, scale);
+  context.restore();
+};

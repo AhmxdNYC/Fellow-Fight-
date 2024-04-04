@@ -1,29 +1,43 @@
-import { Fighter } from "../fighter" // Adjust the path as necessary
+import { Fighter } from "../fighter" // Adjust the path as correct
 
 class SS3 extends Fighter {
   constructor(name, src, x, y, speed) {
     super(name, src, x, y, speed)
-    // Define SS3-specific frames using object literals
-    this.frames = {
+    // Define SS3-specific frames for forwards movement
+    this.forwardFrames = {
       "forwards-1": [143, 524, 40, 50],
-      "forwards-2": [125, 1417, 40, 50],
-      "forwards-3": [64, 1417, 48, 49],
-      "forwards-4": [125, 1417, 40, 50],
-      "forwards-5": [173, 1416, 44, 51],
-      "forwards-6": [225, 1406, 64, 61],
-
-      "forwards-8": [347, 1377, 370, 133],
-
-      // Add additional frame definitions as needed
+      "forwards-2": [603, 518, 36, 58],
+      "forwards-3": [177, 603, 36, 43],
+      "forwards-4": [220, 609, 65, 37],
+      "forwards-5": [300, 610, 55, 29],
+      "forwards-6": [360, 614, 52, 22],
+      "forwards-7": [360, 614, 52, 22],
+      "forwards-8": [442, 601, 36, 44],
     }
-    this.currentFrame = "forwards-1" // Set the initial animation frame
-    this.frameKeys = Object.keys(this.frames) // Keys of the frames for cycling
-    this.frameIndex = 0 // Current index in the frameKeys array
-    this.animationCounter = 0 // Counter to control animation speed
-    this.animationSpeed = 14 // Adjust this to control frame switch speed
+    // Define SS3-specific frames for backwards movement
+    this.backwardFrames = {
+      "backwards-1": [497, 597, 35, 49],
+      "backwards-2": [497, 597, 35, 49], // Assuming these are correct for demonstrating backward movement
+      "backwards-3": [497, 597, 35, 49],
+      "backwards-4": [106, 593, 59, 53], // Assuming these are correct for demonstrating backward movement
+      "backwards-5": [106, 593, 59, 53],
+      "backwards-6": [106, 593, 59, 53],
+      "backwards-7": [106, 593, 59, 53],
+      "backwards-8": [106, 593, 59, 53],
+      "backwards-9": [300, 610, 55, 29],
+      "backwards-10": [360, 614, 52, 22],
+      "backwards-11": [54, 594, 41, 52], // Assuming these are correct for demonstrating backward movement
+    }
+    // Initial setup
+    this.frames = this.forwardFrames // Start with forward frames
+    this.currentFrame = "forwards-1"
+    this.frameKeys = Object.keys(this.frames) // Updated to the current frames
+    this.frameIndex = 0
+    this.animationCounter = 5
+    this.animationSpeed = 18
     this.originalPosition = { x: x, y: y }
+    this.movingForward = true // Track the direction of movement
   }
-
   cycleFrames() {
     this.animationCounter++
     if (this.animationCounter >= this.animationSpeed) {
@@ -32,31 +46,33 @@ class SS3 extends Fighter {
       const nextFrame = this.frameKeys[nextFrameIndex]
 
       // Check if we're entering or leaving frame 7 or 8
-      if (nextFrame === "forwards-6") {
-        // Adjustments specific to entering frame 7
-        this.position.x -= 10 // Example adjustment, change as needed
-        this.position.y -= 10 // Dramatically moves character down
-      } else if (nextFrame === "forwards-8") {
-        // Adjustments specific to entering frame 8
-        this.position.x += 10 // Moves character to the right
-        this.position.y -= 35 // Moves character up
-      } else if (
-        this.currentFrame === "forwards-7" ||
-        this.currentFrame === "forwards-8"
-      ) {
-        // Revert to original position if leaving frame 7 or 8
-        this.position = { ...this.originalPosition }
-      }
-
       // Update current frame and index
       this.currentFrame = nextFrame
       this.frameIndex = nextFrameIndex
       this.animationCounter = 0 // Reset the counter
     }
   }
+  update(canvasWidth) {
+    super.update(canvasWidth) // Call the base class update
+    this.cycleFrames() // Additional call to handle frame cycling
+  }
+
+  toggleDirection() {
+    this.movingForward = !this.movingForward
+    this.frames = this.movingForward ? this.forwardFrames : this.backwardFrames
+    this.frameKeys = Object.keys(this.frames) // Update to current direction frames
+    this.currentFrame = this.frameKeys[0] // Reset to the first frame of the new direction
+    this.frameIndex = 0
+  }
 
   update(canvasWidth) {
     super.update(canvasWidth) // Call the base class update
+    // Example condition to toggle direction (e.g., based on speed sign)
+    if (this.speed > 0 && !this.movingForward) {
+      this.toggleDirection()
+    } else if (this.speed < 0 && this.movingForward) {
+      this.toggleDirection()
+    }
     this.cycleFrames() // Additional call to handle frame cycling
   }
 }
@@ -71,4 +87,29 @@ export const useSS3Character = (canvasRef) => {
   }
 
   return { drawCharacter }
+}
+
+this.forwardFrames = {
+  "forwards-1": [143, 524, 40, 50],
+  "forwards-2": [603, 518, 36, 58],
+  "forwards-3": [177, 603, 36, 43],
+  "forwards-4": [220, 609, 65, 37],
+  "forwards-5": [300, 610, 55, 29],
+  "forwards-6": [360, 614, 52, 22],
+  "forwards-7": [360, 614, 52, 22],
+  "forwards-8": [442, 601, 36, 44],
+}
+// Define SS3-specific frames for backwards movement
+this.backwardFrames = {
+  "backwards-1": [497, 597, 35, 49],
+  "backwards-2": [497, 597, 35, 49], // Assuming these are correct for demonstrating backward movement
+  "backwards-3": [497, 597, 35, 49],
+  "backwards-4": [106, 593, 59, 53], // Assuming these are correct for demonstrating backward movement
+  "backwards-5": [106, 593, 59, 53],
+  "backwards-6": [106, 593, 59, 53],
+  "backwards-7": [106, 593, 59, 53],
+  "backwards-8": [106, 593, 59, 53],
+  "backwards-9": [300, 610, 55, 29],
+  "backwards-10": [360, 614, 52, 22],
+  "backwards-11": [54, 594, 41, 52], // Assuming these are correct for demonstrating backward movement
 }
