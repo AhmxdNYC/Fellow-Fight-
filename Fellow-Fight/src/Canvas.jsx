@@ -1,14 +1,20 @@
 // Canvas.jsx
 import React, { useRef } from "react";
-import useCanvasLogic from './useCharecter'
+import useCharacter from "./useCharecter";
+import Stage from "./Entities/Stage";
 
 function Canvas() {
   const canvasRef = useRef(null);
 
-  // Use the custom hook to handle the drawing logic
-  useCanvasLogic(canvasRef);
+  // Use custom hooks to handle drawing logic
+  useCharacter(canvasRef);
 
-  return <canvas ref={canvasRef} className="bg-black"></canvas>;
+  return (
+    <div>
+      <canvas ref={canvasRef} className="bg-black" />
+      <Stage canvasRef={canvasRef} />
+    </div>
+  );
 }
 
 export default Canvas;
