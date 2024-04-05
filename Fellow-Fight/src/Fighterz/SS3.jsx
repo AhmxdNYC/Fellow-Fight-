@@ -88,28 +88,3 @@ export const useSS3Character = (canvasRef) => {
 
   return { drawCharacter }
 }
-
-this.forwardFrames = {
-  "forwards-1": [143, 524, 40, 50],
-  "forwards-2": [603, 518, 36, 58],
-  "forwards-3": [177, 603, 36, 43],
-  "forwards-4": [220, 609, 65, 37],
-  "forwards-5": [300, 610, 55, 29],
-  "forwards-6": [360, 614, 52, 22],
-  "forwards-7": [360, 614, 52, 22],
-  "forwards-8": [442, 601, 36, 44],
-}
-// Define SS3-specific frames for backwards movement
-this.backwardFrames = {
-  "backwards-1": [497, 597, 35, 49],
-  "backwards-2": [497, 597, 35, 49], // Assuming these are correct for demonstrating backward movement
-  "backwards-3": [497, 597, 35, 49],
-  "backwards-4": [106, 593, 59, 53], // Assuming these are correct for demonstrating backward movement
-  "backwards-5": [106, 593, 59, 53],
-  "backwards-6": [106, 593, 59, 53],
-  "backwards-7": [106, 593, 59, 53],
-  "backwards-8": [106, 593, 59, 53],
-  "backwards-9": [300, 610, 55, 29],
-  "backwards-10": [360, 614, 52, 22],
-  "backwards-11": [54, 594, 41, 52], // Assuming these are correct for demonstrating backward movement
-}
