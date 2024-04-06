@@ -18,6 +18,7 @@ class SS3 extends Fighter {
     this.frameIndex = 0
     this.animationCounter = 0
     this.animationSpeed = 18
+    // 18 normal
   }
 
   cycleFrames() {
@@ -36,8 +37,8 @@ class SS3 extends Fighter {
 }
 
 export const useSS3Character = (canvasRef) => {
-  const ss3 = new SS3("SS3", "/Characters/SS3Sprite.png", 0, 0, 4)
-
+  const ss3 = new SS3("SS3", "/Characters/SS3Sprite.png", 0, 0, 6)
+// speed 4 
   const drawCharacter = (ctx, canvasWidth) => {
     ss3.update(canvasWidth)
     ss3.draw(ctx)
