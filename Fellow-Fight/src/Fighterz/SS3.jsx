@@ -20,7 +20,7 @@ class SS3 extends Fighter {
     this.animationSpeed = 18
     // 18 normal
   }
-//testing ing again nnklnmlksfsfsfsf test ish
+//testing ing again nnklnmlksfsfsfsf test ishshh
   cycleFrames() {
     this.animationCounter++
     if (this.animationCounter >= this.animationSpeed) {
