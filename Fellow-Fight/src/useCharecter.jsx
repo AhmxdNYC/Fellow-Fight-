@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useSS3Character } from "./Fighterz/SS3"; // Ensure this path is correct
-import { useBLACKCharacter } from "./Fighterz/BLACK"; // Ensure this path is correct
+// import { useBLACKCharacter } from "./Fighterz/BLACK"; // Ensure this path is correct
 import { FpsCounter } from "./Entities/FpsCounter"; // Ensure this path is correct
 import stageSrc from "/Stages/namek.png"; // Adjust as necessary
 
@@ -17,7 +17,7 @@ const useCharacter = (canvasRef) => {
     };
 
     const { drawCharacter: drawSS3Character } = useSS3Character(canvasRef);
-    const { drawCharacter: drawBLACKCharacter } = useBLACKCharacter(canvasRef);
+    // const { drawCharacter: drawBLACKCharacter } = useBLACKCharacter(canvasRef);
 
     const resizeCanvas = () => {
       if (!canvasRef.current) return;
@@ -25,6 +25,7 @@ const useCharacter = (canvasRef) => {
       const scale = Math.max(vw / gameViewPort.WIDTH, vh / gameViewPort.HEIGHT);
       const canvasEl = canvasRef.current;
       const context = canvasEl.getContext("2d");
+      
 
       canvasEl.width = gameViewPort.WIDTH * scale;
       canvasEl.height = gameViewPort.HEIGHT * scale;
@@ -58,7 +59,7 @@ const useCharacter = (canvasRef) => {
       );
 
       drawSS3Character(ctx, canvasWidth);
-      drawBLACKCharacter(ctx, canvasWidth);
+      // drawBLACKCharacter(ctx, canvasWidth);
 
       // Update and draw the FPS counter
       fpsCounter.update(deltaTime);
