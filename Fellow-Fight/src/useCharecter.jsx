@@ -1,11 +1,10 @@
 import { useEffect, useRef } from "react";
-import { useSS3Character } from "./Fighterz/SS3"; // Ensure this path is correct
-// import { useBLACKCharacter } from "./Fighterz/BLACK"; // Ensure this path is correct
-import { FpsCounter } from "./Entities/FpsCounter"; // Ensure this path is correct
-import stageSrc from "/Stages/namek.png"; // Adjust as necessary
+import { useSS3Character } from "./Fighterz/SS3" // Ensure this path is correct
+import { useREDVEGETACharacter } from "./Fighterz/RedVegeta" // Updated import path
+import { FpsCounter } from "./Entities/FpsCounter" // Ensure this path is correct
+import stageSrc from "/Stages/namek.png" // Adjust as necessary
 
 const useCharacter = (canvasRef) => {
-  
   const stage = new Image();
   stage.src = stageSrc;
   const fpsCounter = new FpsCounter();
@@ -17,7 +16,7 @@ const useCharacter = (canvasRef) => {
     };
 
     const { drawCharacter: drawSS3Character } = useSS3Character(canvasRef);
-    // const { drawCharacter: drawBLACKCharacter } = useBLACKCharacter(canvasRef);
+    const { drawCharacter: drawREDVEGETACharacter } = useREDVEGETACharacter(canvasRef); // Updated function call
 
     const resizeCanvas = () => {
       if (!canvasRef.current) return;
@@ -25,13 +24,12 @@ const useCharacter = (canvasRef) => {
       const scale = Math.max(vw / gameViewPort.WIDTH, vh / gameViewPort.HEIGHT);
       const canvasEl = canvasRef.current;
       const context = canvasEl.getContext("2d");
-      
 
       canvasEl.width = gameViewPort.WIDTH * scale;
       canvasEl.height = gameViewPort.HEIGHT * scale;
       canvasEl.style.width = `${vw}px`;
       canvasEl.style.height = `${vh}px`;
-
+      context.imageSmoothingEnabled = false;
       context.drawImage(stage, 0, 0, canvasEl.width, canvasEl.height);
       context.save();
       context.scale(scale, scale);
@@ -59,7 +57,7 @@ const useCharacter = (canvasRef) => {
       );
 
       drawSS3Character(ctx, canvasWidth);
-      // drawBLACKCharacter(ctx, canvasWidth);
+      drawREDVEGETACharacter(ctx, canvasWidth); // Updated function call
 
       // Update and draw the FPS counter
       fpsCounter.update(deltaTime);

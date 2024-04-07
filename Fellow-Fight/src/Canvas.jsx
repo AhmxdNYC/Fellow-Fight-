@@ -1,7 +1,7 @@
 // Canvas.jsx
 import React, { useRef } from "react";
 import useCharacter from "./useCharecter";
-import Stage from "./Entities/Stage";
+import Stage from "./constants/Stage";
 
 function Canvas() {
   const canvasRef = useRef(null);
