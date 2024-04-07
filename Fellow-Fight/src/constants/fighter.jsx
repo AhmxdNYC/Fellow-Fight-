@@ -126,7 +126,7 @@ export class Fighter {
     console.log(
       `Drawing ${this.name} at posX: ${posX}, posY: ${this.position.y}, direction: ${this.direction}`
     )
-
+// test acp
     context.restore()
   }
 }
