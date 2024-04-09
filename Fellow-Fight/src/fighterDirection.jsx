@@ -7,3 +7,4 @@ export const FighterState = {
   WALK_FORWARDS: "walkForwards",
   WALK_BACKWARDS: "walkBackwards",
 }
+//////

@@ -1,14 +1,17 @@
 import { FighterDirection, FighterState } from "../fighterDirection"
 
 export class Fighter {
-  constructor(name, src, x, y, speed, direction) {
+  constructor(name, src, x, y, speed, direction, canvasWidth) {
+    // Added canvasWidth to constructor
     this.name = name
     this.image = new Image()
     this.loaded = false
     this.image.onload = () => {
       this.loaded = true
       console.log(
-        `${this.name} image loaded, width: ${this.image.width}, height: ${this.image.height}`
+        console.log(
+          `Initial position set to x: ${this.position.x}, y: ${this.position.y} with canvasWidth: ${canvasWidth}`
+        )
       )
       this.changeState(
         direction === FighterDirection.RIGHT
@@ -20,7 +23,12 @@ export class Fighter {
       console.error(`Failed to load image at ${src}`)
     }
     this.image.src = src
-    this.position = { x, y }
+
+    this.position = {
+      x: direction === FighterDirection.RIGHT ? x : x + canvasWidth - 50, // Use canvasWidth for offset when facing left
+      y: y,
+    }
+    console.log(canvasWidth, 'from fighter')
     this.speed = speed
     this.direction = direction
     this.frames = { default: [0, 0, 50, 50] }
@@ -38,14 +46,21 @@ export class Fighter {
     this.changeState(FighterState.WALK_BACKWARDS)
   }
 
-  changeState(newState) {
-    if (!this.states[newState]) {
-      console.error("Invalid state:", newState)
-      return
-    }
-    this.currentState = newState
-    this.states[this.currentState].init()
+  setDirection(newDirection) {
+    console.log(`Setting direction to: ${newDirection}`);  // Debug log
+    this.direction = newDirection === 'forwards' ? FighterDirection.RIGHT : FighterDirection.LEFT;
+    this.changeState(newDirection === 'forwards' ? FighterState.WALK_FORWARDS : FighterState.WALK_BACKWARDS);
+}
+
+changeState(newState) {
+  if (!this.states[newState]) {
+    console.error("Invalid state:", newState);
+    return;
   }
+  this.currentState = newState;
+  this.states[this.currentState].init();  // Make sure this sets up the state correctly for the update to behave as expected.
+  console.log(`State changed to: ${newState}`);
+}
 
   handleWalkForwardInit() {
     console.log(`${this.name} is walking forwards`)
@@ -68,14 +83,21 @@ export class Fighter {
   updateStageConstraints(canvasWidth) {
     const frameWidth = this.frames[this.currentFrame][2]
 
-    if (this.position.x <= 0) {
-      this.position.x = 0
-      this.direction = FighterDirection.RIGHT // Change direction
-      this.changeState(FighterState.WALK_FORWARDS)
-    } else if (this.position.x + frameWidth >= canvasWidth) {
-      this.position.x = canvasWidth - frameWidth
-      this.direction = FighterDirection.LEFT // Change direction
-      this.changeState(FighterState.WALK_BACKWARDS)
+    // If the character is moving right and exceeds the canvas boundary
+    if (
+      this.direction === FighterDirection.RIGHT &&
+      this.position.x + frameWidth > canvasWidth
+    ) {
+      this.position.x = canvasWidth - frameWidth // Align character to the right edge
+      this.speed = 0 // Stop moving
+      console.log("Stopped at right edge")
+    }
+
+    // If the character is moving left and exceeds the canvas boundary
+    if (this.direction === FighterDirection.LEFT && this.position.x < 0) {
+      this.position.x = 0 // Align character to the left edge
+      this.speed = 0 // Stop moving
+      console.log("Stopped at left edge")
     }
   }
 
@@ -92,41 +114,24 @@ export class Fighter {
 
   draw(context) {
     if (!this.loaded) {
-      console.log("Image not yet loaded")
-      return
+      console.log("Image not yet loaded");
+      return;
     }
 
-    const frame = this.frames[this.currentFrame]
-    let [srcX, srcY, srcWidth, srcHeight] = Array.isArray(frame)
-      ? frame
-      : [0, 0, this.image.width, this.image.height]
+    context.save();  // Save the current state of the canvas
+    let posX = this.position.x;
+    let posY = this.position.y + 300;
 
-    context.save()
-    // The position needs to be recalculated differently when flipping horizontally
-    let posX = this.position.x
+    // Adjust drawing based on the direction
     if (this.direction === FighterDirection.LEFT) {
-      context.scale(-1, 1) // Flip horizontally
-      posX = -posX - srcWidth // Adjust position when flipped
-    } else {
-      context.scale(1, 1) // Normal scale for right direction
+        context.scale(-1, 1);
+        posX = -posX - this.frames[this.currentFrame][2];  // Ensure width is considered in the flip
     }
 
-    context.drawImage(
-      this.image,
-      srcX,
-      srcY,
-      srcWidth,
-      srcHeight,
-      posX,
-      this.position.y + 300,
-      srcWidth,
-      srcHeight
-    )
+    const [srcX, srcY, srcWidth, srcHeight] = this.frames[this.currentFrame];
+    context.drawImage(this.image, srcX, srcY, srcWidth, srcHeight, posX, posY, srcWidth, srcHeight);
+    context.restore();  // Restore to the original state after drawing
+    console.log(`Drawing ${this.name} at posX: ${posX}, posY: ${posY}, direction: ${this.direction}`);
+}
 
-    console.log(
-      `Drawing ${this.name} at posX: ${posX}, posY: ${this.position.y}, direction: ${this.direction}`
-    )
-// test acp
-    context.restore()
-  }
 }
